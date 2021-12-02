@@ -1,0 +1,20 @@
+{
+  "name": "vinted-back",
+  "version": "1.0.0",
+  "description": "Portfolio exercise from Le Reacteur",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Juan C. Cordovez-Mantilla",
+  "license": "MIT",
+  "dependencies": {
+    "crypto-js": "^4.1.1",
+    "express": "^4.17.1",
+    "express-formidable": "^1.2.0",
+    "mongoose": "^6.0.14",
+    "nodemon": "^2.0.15",
+    "uid2": "^1.0.0"
+  }
+}
