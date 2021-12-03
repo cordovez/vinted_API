@@ -4,14 +4,24 @@ const router = express.Router(); // Now instead of express becoming "app" here t
 const formidable = require("express-formidable");
 router.use(formidable());
 
+// Import Cloudinary
+const cloudinary = require("cloudinary").v2;
+
+// cloudinary configuration access keys
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
 // Import Model
 const User = require("../models/User");
+const Offer = require("../models/Offer");
 
 // Imports for authentication:
 const SHA256 = require("crypto-js/sha256");
 const encBase64 = require("crypto-js/enc-base64");
 const uid2 = require("uid2");
-const { find } = require("../models/User");
 
 // Signup //
 router.post("/users/user-signup", async (req, res) => {
@@ -28,21 +38,25 @@ router.post("/users/user-signup", async (req, res) => {
         const hash = SHA256(password + salt).toString(encBase64);
         const token = uid2(16);
         //create
+        //for avatar
+        let myPicture = req.files.picture.path;
+        const avatar = await cloudinary.uploader.upload(myPicture, {
+          folder: "Vinted_API/users",
+        });
+        //
         const user = new User({
           email: email,
-          account: { username: username, phone: phone },
-          // avatar: req.fields., // nous verrons plus tard comment uploader une image
+          account: { username: username, phone: phone, avatar: avatar },
+          avatar: avatar,
           token: token,
           hash: hash,
           salt: salt,
         });
         // Save
         await user.save();
-        res.json([
-          {
-            message: `A new user has been created with <br/> ID: ${user._id}, <br/>  Token: ${user.token}, <br/> Account: ${user.account}`,
-          },
-        ]);
+        res.json({
+          message: `A new user has been created with \\n ID: ${user._id} \\n Token: ${user.token} \\n Account: ${user.account}`,
+        });
       }
     }
   } catch (error) {

@@ -1,17 +1,12 @@
 const mongoose = require("mongoose");
+const User = require("../models/User");
 
 const Offer = mongoose.model("Offer", {
-  product_name: String,
-  product_description: String,
-  product_price: Number,
-  product_details: [
-    { condition: String },
-    { city: String },
-    { brand: String },
-    { size: String },
-    { color: String },
-  ],
-  product_image: { type: mongoose.Schema.Types.Mixed, default: {} },
+  productName: { type: String, maxLength: 50 },
+  productDescription: { type: String, maxLength: 500 },
+  productPrice: { type: String, max: 100000 },
+  productDetails: Array,
+  productImage: { type: mongoose.Schema.Types.Mixed, default: {} },
   owner: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 });
 

@@ -2,9 +2,10 @@ const User = require("../models/User");
 
 const authoriseFirst = async (req, res, next) => {
   if (req.headers.authorization) {
+    const token = req.headers.authorization.replace("Bearer ", "");
     const user = await User.findOne({
-      token: req.headers.authorization.replace("Bearer ", ""),
-    });
+      token: token,
+    }).select("account _id");
     if (!user) {
       return res.status(401).json({ error: "unauthorised" });
     } else {
