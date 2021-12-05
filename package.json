@@ -2,7 +2,7 @@
   "name": "vinted-back",
   "version": "1.0.0",
   "description": "Portfolio exercise from Le Reacteur",
-  "main": "index.js",
+  "main": "server-index.js",
   "scripts": {
     "start": "server-index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
