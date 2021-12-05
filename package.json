@@ -2,9 +2,9 @@
   "name": "vinted-back",
   "version": "1.0.0",
   "description": "Portfolio exercise from Le Reacteur",
-  "main": "server-index.js",
+  "main": "index.js",
   "scripts": {
-    "start": "server-index.js",
+    "start": "node server-index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
