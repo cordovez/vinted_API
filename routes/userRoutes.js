@@ -26,7 +26,6 @@ const uid2 = require("uid2");
 // Signup //
 router.post("/users/user-signup", async (req, res) => {
   const { email, username, phone, password } = req.fields;
-
   try {
     const user = await User.findOne({ email: email });
     if (user) {

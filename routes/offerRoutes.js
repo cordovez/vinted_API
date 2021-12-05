@@ -49,14 +49,67 @@ router.post("/offer/publish", authoriseFirst, async (req, res) => {
   }
 });
 
-// Read all offers
+// Read and filter all offers
 router.get("/offer/offers", authoriseFirst, async (req, res) => {
   try {
-    const offers = await Offer.find().select(
-      "productName productDescription productPrice productDetails condition city brand size color"
-    );
+    const filters = {};
+    // filter price and word in title
+    if (req.query.title) {
+      filters.productName = new RegExp(req.query.title, "i");
+    }
+    if (req.query.priceMin) {
+      filters.productPrice = { $gte: req.query.priceMin };
+    }
+    if (req.query.priceMax) {
+      if (filters.productPrice) {
+        filters.productPrice.$lte = req.query.priceMax;
+      } else {
+        filters.productPrice = {
+          $lte: req.query.priceMax,
+        };
+      }
+    }
+    // Sort
+    let sort = {};
 
-    return res.json(offers);
+    if (req.query.sort === "prece-desc") {
+      sort = { productPrice: -1 };
+    } else {
+      sort = { productPrice: 1 };
+    }
+
+    // page number (default 1)
+    let page = 1;
+    if (req.query.page) {
+      page = Number(req.query.page);
+    }
+
+    // limit to 3
+    let limit = 3;
+    if (req.query.limit) {
+      limit = Number(req.query.limit);
+    }
+
+    const offers = await Offer.find(filters)
+      .sort(sort)
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .select("productName productPrice");
+
+    const count = await Offer.countDocuments(filters);
+
+    res.json({ count: count, offers: offers });
+  } catch (error) {}
+});
+// Read offer by _id
+router.get("/offer/:_id", authoriseFirst, async (req, res) => {
+  try {
+    const offer = await Offer.findById(req.params._id).populate("owner");
+    if (offer) {
+      return res.status(200).json(offer);
+    } else {
+      res.json("That offer does not exist");
+    }
   } catch (error) {
     res.status(400).json(error.message);
   }
