@@ -1,7 +1,7 @@
 // import secret keys
 require("dotenv").config();
 
-// Basic dependencie
+// Basic dependencies
 const express = require("express");
 const formidable = require("express-formidable");
 const cors = require("cors");
